@@ -16,7 +16,7 @@ Overview of Code
 
 The basic framework of the game is a basic Entity-Component framework inspired by [Artemis](http://gamadu.com/artemis/) and [posts by Adam Martin](http://t-machine.org/index.php/2007/09/03/entity-systems-are-the-future-of-mmog-development-part-1/). Just about everything in the game is an Entity; every data attribute is packaged in a Component; and everything that happens to update or react to those Components happens in a System. For a basic overview of the theory behind this, check out [this post](http://t-machine.org/index.php/2007/11/11/entity-systems-are-the-future-of-mmog-development-part-2/).
 
-All of the (relatively) generic / reusable code is in src/shared. All of the game-specific code is in src/games/juicy. The build script copies all of this into a build directory and zips it up into a .love file.
+All of the (relatively) generic / reusable code is in src/shared. (What is there is a subset of some of the shared libraries I have in my [main love repository](https://github.com/jimmytheleaf/love-lonelyatoms).) All of the game-specific code is in src/games/juicy. The build script copies all of this into a build directory and zips it up into a .love file.
 
 
 To Build
