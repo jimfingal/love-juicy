@@ -1,5 +1,6 @@
 love-juicy
 ==========
+![echo breakout](img/echobreakout.png)
 
 This package is an implementation of some of Martin Jonasson &amp; Petri Purho's "[Juice It Or Lose It](http://www.youtube.com/watch?v=Fy0aCDmgnxg)" features in Love2d.
 
