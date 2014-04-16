@@ -57,12 +57,23 @@ function List:members()
 	return ipairs(self.list)
 end
 
+function List:insertAt(index, object)
+	self.list[index] = object
+end
+
+
 function List:memberAt(index)
 	return self.list[index]
 end
 
 function List:size()
 	return #self.list
+end
+
+function List:clear()
+	for i in self:members() do
+		self.list[i] = nil
+	end
 end
 
 function List:__tostring()

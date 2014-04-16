@@ -23,7 +23,7 @@ To Build
 --------
 Directories are organized to make it easier to have multiple game projects, even though there is just one here. To build after any chanages, run:
 
-	./build.sh juicy
+	./build.sh
 
 This script will build and automatically run the .love package.
 

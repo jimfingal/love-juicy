@@ -1,7 +1,7 @@
-require 'core.components.transform'
-require 'core.components.rendering'
-require 'core.components.collider'
-require 'core.components.motion'
+require 'entity.components.transform'
+require 'entity.components.rendering'
+require 'entity.components.collider'
+require 'entity.components.motion'
 Easing = require 'external.easing'
 
 require 'enums.tags'
@@ -10,25 +10,22 @@ require 'enums.events'
 
 BrickBehaviors = {}
 
+
 function BrickBehaviors.dropInBricks(world)
 
     local bricks = world:getEntitiesInGroup(Tags.BRICK_GROUP)
     local tween_system = world:getSystem(TweenSystem)
     -- Send bricks up to sky and make them smaller
 
-
-    local vertical_translation = Vector(0, -300)
-
     for brick in bricks:members() do
 
         local transform = brick:getComponent(Transform)
-        local shape = brick:getComponent(ShapeRendering):getShape()
+        local shape = brick:getComponent(Rendering):getRenderable():getShape()
 
         local oldx = transform:getPosition().x
         local oldy = transform:getPosition().y
 
-        local new_position = transform:getPosition() + vertical_translation
-        transform:moveTo(new_position:unpack())
+        transform:move(0, -300)
 
         local rotate_tween = 1
         local drop_tween = 1
@@ -51,7 +48,7 @@ function BrickBehaviors.dropInBricks(world)
 
             shape.width = 30
             shape.height = 10
-            tween_system:addTween(scale_tween, brick:getComponent(ShapeRendering):getShape(), {width = 50, height = 20}, Easing.outBounce)
+            tween_system:addTween(scale_tween, shape, {width = 50, height = 20}, Easing.outBounce)
 
         end
 
@@ -67,12 +64,12 @@ function  BrickBehaviors.dispatchBrick(ball, brick)
     local ball_position = ball:getComponent(Transform):getPosition()
     local ball_movement = ball:getComponent(Motion)
     local ball_collider = ball:getComponent(Collider)
-    local ball_rendering = ball:getComponent(ShapeRendering)
+    local ball_rendering = ball:getComponent(Rendering):getRenderable()
 
     local brick_transform = brick:getComponent(Transform)
     local brick_position = brick:getComponent(Transform):getPosition()
     local brick_collider = brick:getComponent(Collider)
-    local brick_rendering = brick:getComponent(ShapeRendering)
+    local brick_rendering = brick:getComponent(Rendering):getRenderable()
 
     
     local brick_state = brick:getComponent(StateComponent)

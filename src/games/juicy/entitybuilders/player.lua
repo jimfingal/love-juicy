@@ -1,19 +1,19 @@
-require 'core.components.transform'
-require 'core.components.rendering'
-require 'core.components.collider'
-require 'core.components.motion'
-require 'core.components.behavior'
-require 'core.components.inputresponse'
-require 'core.components.soundcomponent'
+require 'entity.components.transform'
+require 'entity.components.rendering'
+require 'entity.components.collider'
+require 'entity.components.motion'
+require 'entity.components.behavior'
+require 'entity.components.inputresponse'
+require 'entity.components.soundcomponent'
 
-require 'behaviors.genericbehaviors'
+require 'game.generic.genericbehaviors'
 
 require 'enums.tags'
 require 'enums.palette'
 
 local PlayerBehaviors = require 'behaviors.playerbehaviors'
 require 'external.middleclass'
-require 'core.entity.entitybuilder'
+require 'entity.entitybuilder'
 
 PlayerBuilder  = class('PlayerBuilder', EntityBuilder)
 
@@ -27,9 +27,9 @@ function PlayerBuilder:create()
     EntityBuilder.create(self)
 
     self.entity:addComponent(Transform(350, 500))
-    self.entity:addComponent(ShapeRendering():setColor(Palette.COLOR_PADDLE:unpack()):setShape(RectangleShape:new(100, 30)))
+    self.entity:addComponent(Rendering():addRenderable(ShapeRendering():setColor(Palette.COLOR_PADDLE:unpack()):setShape(RectangleShape:new(100, 30))))
     self.entity:addComponent(Collider():setHitbox(RectangleShape:new(100, 30)))
-    self.entity:addComponent(Motion():setMaxVelocity(800, 0):setMinVelocity(-800, 0):setDrag(800, 0))
+    self.entity:addComponent(Motion():setMaxSpeed(800):setDrag(800, 0))
 
     self.entity:tag(Tags.PLAYER)
     self.entity:addToGroup(Tags.PLAY_GROUP)

@@ -1,11 +1,11 @@
-require 'core.components.transform'
-require 'core.components.rendering'
-require 'core.components.collider'
-require 'core.components.motion'
-require 'core.systems.tweensystem'
-require 'core.systems.schedulesystem'
+require 'entity.components.transform'
+require 'entity.components.rendering'
+require 'entity.components.collider'
+require 'entity.components.motion'
+require 'entity.systems.tweensystem'
+require 'entity.systems.schedulesystem'
 
-require 'core.vector'
+require 'math.vector2'
 
 require 'enums.scenes'
 require 'enums.tags'
@@ -14,7 +14,7 @@ require "settings"
 
 require 'math'
 
-require 'utils.mathutils'
+require 'math.util'
 
 
 EntityEffects = {}
@@ -65,7 +65,7 @@ function EntityEffects.glitchColors(entity)
     -- to some other color
     if not EntityEffects.glitchLock[entity] then
 
-        local rendering = entity:getComponent(ShapeRendering)
+        local rendering = entity:getComponent(Rendering):getRenderable()
 
         local previous_color = rendering:getColor()
 

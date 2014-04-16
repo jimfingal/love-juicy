@@ -1,8 +1,12 @@
 require 'external.middleclass'
+require 'socket'
 
 Set = class('Set')
 
+Set.EMPTY_SET = Set()
+
 function Set:initialize(list)
+
 	self.set = {}
 
 	if list then
@@ -78,7 +82,11 @@ function Set:intersection(b)
     return intersection
 end
 
-
+function Set:clear()
+	for member in self:members() do
+		self:remove(member)
+	end
+end
 
 function Set:__tostring()
 	local l = {} -- List of elements

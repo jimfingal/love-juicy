@@ -1,14 +1,14 @@
-require 'core.components.transform'
-require 'core.components.rendering'
-require 'core.components.collider'
-require 'core.components.soundcomponent'
-require 'core.components.statecomponent'
+require 'entity.components.transform'
+require 'entity.components.rendering'
+require 'entity.components.collider'
+require 'entity.components.soundcomponent'
+require 'entity.components.statecomponent'
 
 require 'enums.assets'
 require 'enums.tags'
 require 'enums.palette'
 
-require 'core.entity.entitybuilder'
+require 'entity.entitybuilder'
 local BrickBehaviors = require 'behaviors.brickbehaviors'
 
 require 'external.middleclass'
@@ -58,7 +58,7 @@ function BrickBuilder:loadBricks()
 
             local brick = em:createEntity('brick' .. y .. x)
             brick:addComponent(Transform(x, y):setLayerOrder(2))
-            brick:addComponent(ShapeRendering():setColor(Palette.COLOR_BRICK:unpack()):setShape(RectangleShape:new(50, 20)))
+            brick:addComponent(Rendering():addRenderable(ShapeRendering():setColor(Palette.COLOR_BRICK:unpack()):setShape(RectangleShape:new(50, 20))))
             brick:addComponent(Collider():setHitbox(RectangleShape:new(50, 20)))
             brick:addComponent(SoundComponent():addSound(Assets.BRICK_SOUND, asset_manager:getSound(Assets.BRICK_SOUND)))
             brick:addComponent(StateComponent():setState(Tags.BRICK_ALIVE, true))

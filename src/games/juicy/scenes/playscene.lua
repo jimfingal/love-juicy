@@ -1,15 +1,15 @@
 require 'external.middleclass'
-require 'core.scene'
+require 'game.scene'
 require 'collections.set'
-require 'core.entity.world'
-require 'core.components.transform'
-require 'core.components.rendering'
-require 'core.components.collider'
-require 'core.components.motion'
-require 'core.components.behavior'
-require 'core.components.inputresponse'
-require 'core.components.soundcomponent'
-require 'core.shapedata'
+require 'entity.world'
+require 'entity.components.transform'
+require 'entity.components.rendering'
+require 'entity.components.collider'
+require 'entity.components.motion'
+require 'entity.components.behavior'
+require 'entity.components.inputresponse'
+require 'entity.components.soundcomponent'
+require 'game.shapedata'
 require 'behaviors.ballbehaviors'
 require 'behaviors.playerbehaviors'
 
@@ -30,8 +30,9 @@ require 'entitybuilders.globalinput'
 require 'entitybuilders.player'
 require 'entitybuilders.walls'
 require 'entitybuilders.wintracker'
-require 'core.entity.entityquery'
+require 'entity.entityquery'
 
+require 'math.vector2'
 
 
 local Collisions = require 'scripts.collisions'
@@ -41,7 +42,7 @@ local BrickBehaviors = require 'behaviors.brickbehaviors'
 local INPUTTABLE_ENTITIES = EntityQuery():addOrSet(InputResponse)
 local BEHAVIOR_ENTITIES = EntityQuery():addOrSet(Behavior)
 local MOVABLE_ENTITIES = EntityQuery():addOrSet(Transform):addOrSet(Motion)
-local DRAWABLE_ENTITIES =  EntityQuery():addOrSet(TextRendering, ShapeRendering, ImageRendering):addOrSet(Transform)
+local DRAWABLE_ENTITIES =  EntityQuery():addOrSet(Rendering):addOrSet(Transform)
 local EMITTERS = EntityQuery():addOrSet(Emitter)
 
 
@@ -112,13 +113,15 @@ end
 function PlayScene:update(dt)
 
     -- Update time system
+   
     local time_system = self.world:getTimeSystem()
     time_system:update(dt)
     local game_world_dt = time_system:getDt()
 
+   -- [[
     -- Update scheduled functions
     self.world:getScheduleSystem():update(game_world_dt)
-
+    
     -- Update tweens 
     self.world:getTweenSystem():update(game_world_dt)
 
@@ -129,7 +132,7 @@ function PlayScene:update(dt)
     -- Update Emitters 
     local emitters = self.world:getEntityManager():query(EMITTERS)
     self.world:getSystem(EmissionSystem):updateEmitters(emitters)
-    
+
     -- Update behaviors
     local behaviorals = self.world:getEntityManager():query(BEHAVIOR_ENTITIES)
     self.world:getBehaviorSystem():processBehaviors(behaviorals, game_world_dt) 
@@ -137,12 +140,13 @@ function PlayScene:update(dt)
     -- Update movement 
     local movables = self.world:getEntityManager():query(MOVABLE_ENTITIES)
     self.world:getMovementSystem():updateMovables(movables, game_world_dt)
-    
+  
     -- Detect and Announce collisions
     local collision_system = self.world:getCollisionSystem()
     local collisions = collision_system:getCollisions()
     Collisions.announceCollisions(self.world, collisions)
 
+    --]]
 end
 
 
@@ -186,7 +190,10 @@ function PlayScene:outputDebugText()
 
     local debugstart = 50
     local player_transform =  self.world:getTaggedEntity(Tags.PLAYER):getComponent(Transform)
+    local player_motion =  self.world:getTaggedEntity(Tags.PLAYER):getComponent(Motion)
+
     local ball_transform = self.world:getTaggedEntity(Tags.BALL):getComponent(Transform)
+
     local ball_collider = self.world:getTaggedEntity(Tags.BALL):getComponent(Collider)
 
     love.graphics.print("Ball x: " .. ball_transform.position.x, 50, debugstart + 20)
@@ -194,7 +201,11 @@ function PlayScene:outputDebugText()
     love.graphics.print("Ball collider active: " .. tostring(ball_collider.active), 50, debugstart + 60)
     love.graphics.print("Player x: " .. player_transform.position.x, 50, debugstart + 80)
     love.graphics.print("Player y: " .. player_transform.position.y, 50, debugstart + 100)
+
     love.graphics.print("FPS: " .. love.timer.getFPS(), 50, debugstart + 120)
+
+    love.graphics.print("Player movement: " .. tostring(player_motion.velocity), 50, debugstart)
+
 
     local statistics_system = self.world:getStatisticsSystem()
     local timer_system = self.world:getTimeSystem()
@@ -207,10 +218,12 @@ function PlayScene:outputDebugText()
     love.graphics.print("Time since ball hit wall: " .. statistics_system:timeSinceLastEventOccurence(Events.BALL_COLLISION_WALL, timer_system:getTime()), 50, debugstart + 220)
     love.graphics.print("Time since ball hit brick: " .. statistics_system:timeSinceLastEventOccurence(Events.BALL_COLLISION_BRICK, timer_system:getTime()), 50, debugstart + 240)
 
+    --[[
     local ball_history = self.world:getTaggedEntity(Tags.BALL):getComponent(History)
     --ålove.graphics.print("Time spent in history: " .. debug_time_in_history, 50, debugstart + 260)
     love.graphics.print("Ball History size: " .. ball_history:getComponentHistory(Transform):size(), 50, debugstart + 280)
     love.graphics.print("New Transform Objects created: " .. ball_transform.debug_objects_created, 50, debugstart + 300)
+    ]]
 
     frame = frame + 1
 
@@ -219,6 +232,10 @@ function PlayScene:outputDebugText()
     end
 
     love.graphics.print('Memory actually used (in kB): ' .. memsize, 50, debugstart + 320)
+    love.graphics.print('Vector objects created: ' .. ClassCounter[Vector2], 50, debugstart + 340)
+    love.graphics.print('Set objects created: ' .. ClassCounter[Set], 50, debugstart + 360)
+    love.graphics.print('List objects created: ' .. ClassCounter[List], 50, debugstart + 380)
+
 
 
     --[[

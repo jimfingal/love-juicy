@@ -1,18 +1,18 @@
-require 'core.components.transform'
-require 'core.components.rendering'
-require 'core.components.collider'
-require 'core.components.motion'
-require 'core.components.behavior'
-require 'core.components.inputresponse'
-require 'core.components.soundcomponent'
-require 'core.components.messaging'
-require 'core.systems.messagesystem'
+require 'entity.components.transform'
+require 'entity.components.rendering'
+require 'entity.components.collider'
+require 'entity.components.motion'
+require 'entity.components.behavior'
+require 'entity.components.inputresponse'
+require 'entity.components.soundcomponent'
+require 'entity.components.messaging'
+require 'entity.systems.messagesystem'
 require 'enums.events'
 require 'enums.tags'
 require 'enums.palette'
-require 'behaviors.genericbehaviors'
+require 'game.generic.genericbehaviors'
 
-require 'core.entity.entitybuilder'
+require 'entity.entitybuilder'
 
 require 'external.middleclass'
 
@@ -28,7 +28,7 @@ function BallBuilder:create()
     EntityBuilder.create(self)
 
     self.entity:addComponent(Transform(395, 485))
-    self.entity:addComponent(ShapeRendering():setColor(Palette.COLOR_BALL:unpack()):setShape(RectangleShape:new(15, 15)))
+    self.entity:addComponent(Rendering():addRenderable(ShapeRendering():setColor(Palette.COLOR_BALL:unpack()):setShape(RectangleShape:new(15, 15))))
     self.entity:addComponent(Collider():setHitbox(RectangleShape:new(15, 15)))
     self.entity:addComponent(Motion():setMaxVelocity(600, 400):setMinVelocity(-600, -400):setVelocity(200, -425))
     -- self.entity:addComponent(Behavior():addUpdateFunction(ballAutoResetOnNonexistence))
@@ -72,7 +72,7 @@ function BallBuilder:create()
     my_messaging:registerMessageResponse(Events.GAME_RESET, function()
        
         local collider = self.entity:getComponent(Collider)
-        local rendering = self.entity:getComponent(ShapeRendering)
+        local rendering = self.entity:getComponent(Rendering)
 
         collider:disable()
         rendering:disable()
@@ -94,12 +94,12 @@ function ballInputResponse(ball, held_actions, pressed_actions, dt)
         local ball_transform = ball:getComponent(Transform)
         local ball_movement = ball:getComponent(Motion)
         local ball_collider = ball:getComponent(Collider)
-        local ball_rendering = ball:getComponent(ShapeRendering)
+        local ball_rendering = ball:getComponent(Rendering)
 
         local player = ball:getWorld():getTaggedEntity(Tags.PLAYER)
 
         local player_transform = player:getComponent(Transform)
-        local player_render = player:getComponent(ShapeRendering)
+        local player_render = player:getComponent(Rendering):getRenderable()
 
 
         ball_collider:enable()

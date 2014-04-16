@@ -1,18 +1,4 @@
-
-# Requires input
-if [ $# -ne 1 ]
-then
-    echo "Error in $0 - Invalid Argument Count"
-    echo "Syntax: $0 input_file"
-    exit
-fi
-
-# Get rid of any running love instances
-killall love
-
-sleep 1
-
-GAME_NAME=$1
+GAME_NAME="juicy"
 BUILD_DIR="_build"
 DISTRO_DIR="distro"
 SHARED_DIR="./src/shared"
@@ -44,5 +30,9 @@ cd ..
 
 # rm -rf $BUILD_DIR # Disable if we want to inspect output
 
+# Get rid of any running love instances
+killall love
+
+sleep 1
 
 open ./$DISTRO_DIR/$GAME_NAME.love
